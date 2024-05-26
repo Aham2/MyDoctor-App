@@ -1,5 +1,5 @@
 import heroImg01 from '../assets/images/hero-img01.png';
-import heroImg02 from '../assets/images/hero-img02.png';
+// import heroImg02 from '../assets/images/';
 import heroImg03 from '../assets/images/hero-img03.png';
 import featureImg from '../assets/images/feature-img.png';
 import faqImg from '../assets/images/faq-img.png'
@@ -75,7 +75,7 @@ const Home = () => {
               </div>
 
               <div className='mt-[30px]'>
-                <img src={heroImg02} alt=""  className='w-full mb-[30px]' />
+                {/* <img src={heroImg02} alt=""  className='w-full mb-[30px]' /> */}
                 <img src={heroImg03} alt=""  className='w-full' />
               </div>
             </div>

@@ -1,12 +1,16 @@
 import signupImg from "../assets/images/signup.gif"
 import avatar from "../assets/images/doctor-img01.png"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react"
+import uploadImageToCloudinary from "../utils/uploadCloudinary"
+import { BASE_URL } from "../config";
+import toast from 'react-toastify'
 
 const Signup = () => {
 
     const [selectedFile, setSelectedFile] = useState(null)
     const [previewURL, setPreviewURL] = useState(null)
+    const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -16,6 +20,8 @@ const Signup = () => {
         role: 'patient'
     })
 
+    const navigate = useNavigate()
+
     const handleInputChange = e => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
@@ -24,13 +30,43 @@ const Signup = () => {
 
         const file = event.target.files[0]
 
+        const data = await uploadImageToCloudinary(file);
+
+        setPreviewURL(data.url)
+        setSelectedFile(data.url)
+        setFormData({ ...formData, photo: data.url });
+
         // use cloudinary to upload images
     };
 
     const submitHandler = async event => {
 
-        console.log(formData);
         event.preventDefault()
+        setLoading(true)
+
+        try {
+            const res = await fetch(`${BASE_URL}/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+
+            const {message} = await res.json()
+
+            if(!res.ok){
+                throw new Error(message)
+            }
+
+            setLoading(false)
+            toast.success(message)
+            navigate('/login')
+
+        } catch (error) {
+            toast.error(error.message)
+            setLoading(false)
+        }
     }
 
     return (

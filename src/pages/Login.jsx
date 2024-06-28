@@ -1,16 +1,50 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { BASE_URL } from '../config';
+import { toast } from 'react-toastify';
 
 const Login = () => {
 
+  const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     email:'',
     password:''
   })
 
+  const navigate = useNavigate()
+
   const handleInputChange = e => {
     setFormData({...formData, [e.target.name]:e.target.value})
   }
+
+  const submitHandler = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+
+    try {
+      const result = await fetch(`${BASE_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const { message } = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.message);
+      }
+
+      setLoading(false);
+      toast.success(message);
+      navigate("/home");
+    } catch (error) {
+      toast.error(error.message);
+      setLoading(false);
+    }
+  };
+
 
   return (
     <section className="px-5 lg:px-0">
@@ -20,7 +54,7 @@ const Login = () => {
           Hello! <span className="text-primaryColor">Welcome</span> Back
         </h3>
 
-        <form className="py-4 md:py-0">
+        <form className="py-4 md:py-0" onSubmit={submitHandler}>
           <div className="mb-5">
             <input type="email" placeholder="Enter Your Email" name="email" value={FormData.email} onChange={handleInputChange} 
             className="w-full px-4 py-3

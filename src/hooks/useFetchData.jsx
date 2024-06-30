@@ -4,15 +4,18 @@ import { token } from "../config";
 const useFetchData = (url) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, serError] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
         const res = await fetch(url, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          },
+        }); 
 
         const result = await res.json();
 
@@ -24,10 +27,15 @@ const useFetchData = (url) => {
         setLoading(false);
       } catch (err) {
         setLoading(false);
-        serError(err.message);
+        setError(err.message);
       }
     };
-    fetchData();
+
+    if (token) {
+      fetchData();
+    } else {
+      setError("No token found");
+    }
   }, [url]);
 
   return {

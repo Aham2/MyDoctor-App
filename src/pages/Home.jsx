@@ -10,7 +10,7 @@ import videoIcon from '../assets/images/video-icon.png';
 import avatarIcon from '../assets/images/avatar-icon.png';
 import { Link } from 'react-router-dom';
 import {BsArrowRight} from 'react-icons/bs';
-import About from '../components/About';
+import About from '../components/About/About';
 import ServiceList from '../components/Services/ServiceList';
 import DoctorsList from '../components/Doctors/DoctorsList';
 import FaqList from '../components/Faq/FaqList';
